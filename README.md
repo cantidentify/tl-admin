@@ -1,11 +1,4 @@
-# React-Native
+# tl-admin
+-ระบบ Admin สำหรับ จัดการข้อมูลบนแอป วัดเทพลีลาพระอารามหลวง
 
-อัปโหลดไฟล์ใน Screen <br>
-ส่วน dependency ดูใน package.json
-
-# Install
- 
- เมื่อ pull โปรเจคแล้ว ให้พิมพ์ npm install  เพื่อ install dependencie ข้างใน package.json ทั้งหมด
-
-
- 
+-repo อันนี้ใช้สำหรับแยกไฟล์เพื่อให้ Build apk ได้ง่าย โดยจะเน้นทำ Front-end เป็นหลัก เมื่อระบบอื่นๆ เสร็จจะนำไฟล์มารวมใน Repo นี้
