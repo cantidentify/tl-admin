@@ -6,11 +6,9 @@ android/.gradle/6.3/executionHistory
 .expo/
 android/
 
-
 .eslintrc.js
 .prettierrc.js
 index.js
-metro.config.js
 temp.js
 .buckconfig
 .flowconfig

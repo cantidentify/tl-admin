@@ -1,86 +1,70 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, Animated, Text, Alert } from 'react-native';
+import React from 'react'
+import { View, Text, Button } from 'react-native'
+
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from '@react-navigation/stack';
 
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { DrawerContent } from './screen/DrawerContent';
 
-import  Home  from './screen/layout';
-import News from './screen/News'
-import Admin from './screen/Admin'
+import Activity from './screen/Activity';
+import Gallery from './screen/Gallery';
 
-let Stack = createStackNavigator()
+const Drawer = createDrawerNavigator();
 
+const ActivityStack = createStackNavigator();
+const GalleryStack = createStackNavigator();
 
+const ActivityStackScreen = () => (
+  <ActivityStack.Navigator
+    screenOptions={{
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+    }}>
+    <ActivityStack.Screen
+      name="Activity"
+      component={Activity}
+      options={{
+        headerTitle: 'อัปเดตข่าวสารกิจกรรม',
+        headerTitleStyle: {alignSelf: 'center'},
+      }}
+    />
 
-function HomeScreen() {
-  return (
-    <Stack.Navigator>
-    <Stack.Screen name="Home" component={Home} />
-  </Stack.Navigator>
-  );
-}
+    {/* {<HomeStack.Screen name="Info" component={InfoStackScreen} options={{headerShown: false}} /> } */}
+  </ActivityStack.Navigator>
+);
 
+const GalleryStackScreen = () => (
+  <GalleryStack.Navigator
+    screenOptions={{
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+    }}>
+    <GalleryStack.Screen
+      name="Gallery"
+      component={Gallery}
+      options={{
+        headerTitle: 'อัปเดตคลังรูปภาพ',
+        headerTitleStyle: {alignSelf: 'center'},
+      }}
+    />
 
+    {/* {<HomeStack.Screen name="Info" component={InfoStackScreen} options={{headerShown: false}} /> } */}
+  </GalleryStack.Navigator>
+);
 
-function SettingsScreen() {
-  return(  <Stack.Navigator>
-    <Stack.Screen name="Home" component={Home} />
-  </Stack.Navigator>)
-
-
-}
-
-function AdminScreen() {
-  return(  <Stack.Navigator>
-    <Stack.Screen name="Home" component={Admin} />
-  </Stack.Navigator>)
-
-
-}
-
-function NewsScreen() {
-  return( <Stack.Navigator>
-    <Stack.Screen name="News" component={News} />
-  </Stack.Navigator>)
- 
-
-}
-
-const Tab = createBottomTabNavigator();
-
-function MyTabs() {
-  return (
-
-
-    <Tab.Navigator>
-      <Tab.Screen name="หน้าหลัก" component={HomeScreen} />
-      <Tab.Screen name="สถานที่" component={SettingsScreen} />
-      <Tab.Screen name="ข่าวสาร" component={NewsScreen} />
-      <Tab.Screen name="สมาชิก" component={AdminScreen} />
-      {/* <Tab.Screen name="ข้อมูลวัด" component={Info} /> */}
-    </Tab.Navigator>
-
-
-
-
-  );
-}
 
 export default function App() {
-
- 
-
-
-
-
-
   return (
     <NavigationContainer>
-      <MyTabs />
+      <Drawer.Navigator initialRouteName="ActivityUpdate" drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Screen name="ActivityUpdate" component={ActivityStackScreen} />
+        <Drawer.Screen name="GalleryUpdate" component={GalleryStackScreen} />
+      </Drawer.Navigator>
     </NavigationContainer>
-
-
   );
 }
+
