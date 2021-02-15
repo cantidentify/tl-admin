@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image, } from "react-native";
 import {
   useTheme,
   Avatar,
@@ -13,7 +13,8 @@ import {
 } from "react-native-paper";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { AntDesign, FontAwesome  } from '@expo/vector-icons';
+
 
 export function DrawerContent(props) {
   return (
@@ -22,7 +23,11 @@ export function DrawerContent(props) {
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
             <View style={{ flexDirection: "row", marginTop: 15 }}>
-              <Avatar.Image size={50} />
+              <Avatar.Image 
+                source={require('../asset/icon/admin.png')}
+                size={50}
+                style={{backgroundColor:'white'}}
+              />
               <View style={{ marginLeft: 15, flexDirection: "column" }}>
                 <Title style={styles.title}>Admin</Title>
               </View>
@@ -32,7 +37,7 @@ export function DrawerContent(props) {
           <Drawer.Section style={styles.drawerSection}>
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon name="home-outline" color={color} size={size} />
+                <AntDesign name="notification" size={size} color={color} />
               )}
               label="Activity Update"
               onPress={() => {
@@ -42,7 +47,7 @@ export function DrawerContent(props) {
 
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon name="home-outline" color={color} size={size} />
+                <FontAwesome name="image" size={size} color={color} />
               )}
               label="Gallery Update"
               onPress={() => {
@@ -55,11 +60,7 @@ export function DrawerContent(props) {
       <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem 
                     icon={({color, size}) => (
-                        <Icon 
-                        name="exit-to-app" 
-                        color={color}
-                        size={size}
-                        />
+                      <AntDesign name="logout" size={size} color='#F1948A' />
                     )}
                     label="Sign Out"
                     onPress={() => {signOut()}}

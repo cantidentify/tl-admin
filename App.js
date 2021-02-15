@@ -1,6 +1,9 @@
 import React from 'react'
 import { View, Text, Button } from 'react-native'
 
+import { Ionicons } from '@expo/vector-icons';
+
+
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import {
@@ -8,7 +11,7 @@ import {
   CardStyleInterpolators,
 } from '@react-navigation/stack';
 
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 import { DrawerContent } from './screen/DrawerContent';
 
@@ -20,10 +23,17 @@ const Drawer = createDrawerNavigator();
 const ActivityStack = createStackNavigator();
 const GalleryStack = createStackNavigator();
 
-const ActivityStackScreen = () => (
+const ActivityStackScreen = ( {navigation} ) => (
   <ActivityStack.Navigator
     screenOptions={{
       cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      headerStyle: {
+        backgroundColor: '#009387',
+      },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+        fontWeight: 'bold'
+        }
     }}>
     <ActivityStack.Screen
       name="Activity"
@@ -31,6 +41,9 @@ const ActivityStackScreen = () => (
       options={{
         headerTitle: 'อัปเดตข่าวสารกิจกรรม',
         headerTitleStyle: {alignSelf: 'center'},
+        headerLeft: () => (
+          <Ionicons.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Ionicons.Button>
+        )
       }}
     />
 
@@ -38,10 +51,17 @@ const ActivityStackScreen = () => (
   </ActivityStack.Navigator>
 );
 
-const GalleryStackScreen = () => (
+const GalleryStackScreen = ( {navigation} ) => (
   <GalleryStack.Navigator
     screenOptions={{
       cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      headerStyle: {
+        backgroundColor: '#009387',
+      },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+        fontWeight: 'bold'
+        }
     }}>
     <GalleryStack.Screen
       name="Gallery"
@@ -49,6 +69,9 @@ const GalleryStackScreen = () => (
       options={{
         headerTitle: 'อัปเดตคลังรูปภาพ',
         headerTitleStyle: {alignSelf: 'center'},
+        headerLeft: () => (
+          <Ionicons.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Ionicons.Button>
+        )
       }}
     />
 
