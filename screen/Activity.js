@@ -1,89 +1,155 @@
-import React from "react";
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
-import { TextInput, RadioButton } from "react-native-paper";
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  Image
+} from "react-native";
+import { TextInput, RadioButton, Button } from "react-native-paper";
+import DocumentPicker from "react-native-document-picker";
+var RNFS = require("react-native-fs");
 
 import { Ionicons } from "@expo/vector-icons";
 
 const Seperator = () => <View style={styles.seperator} />;
 
 const App = () => {
-  const [newsType, setNewType ] = React.useState(0);
-  const [text, setText] = React.useState('');
+  const [newsType, setNewType] = React.useState(0);
+  let [base64image, setbase64image] = useState();
+  let [test, setTest] = useState();
+  const [text, setText] = React.useState("");
+  const [errorInput, setErrInput] = React.useState(false);
+
+  async function lookfile() {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images],
+      });
+      console.log(res.uri, res.type, res.name, res.size);
+
+      const split = res.uri.split("/");
+      const name = split.pop();
+      const inbox = split.pop();
+
+      //console.log(res.size)
+      //console.log(res.uri)
+      RNFS.readFile(res.uri, "base64").then((res) => {
+        setbase64image(`data:image/jpg;base64,${res}`);
+        console.log(res);
+      });
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+      } else {
+        throw err;
+      }
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <View style={styles.box}>
+          {/* ///////////////// START เลือกประเทภ /////////////////////// */}
           <Text style={styles.title}>เลือกประเภท</Text>
-          <View style={{justifyContent:'center',flexDirection:'row'}}>
-            
-            <View style={{flexDirection:'row'}}>
-              <View style={{justifyContent:'center'}}>
-                <TouchableOpacity
-                  onPress={()=>setNewType(0)}
-                >
-              <Text >ข่าวสาร</Text>
-              </TouchableOpacity>
+          <View style={{ justifyContent: "center", flexDirection: "row" }}>
+            <View style={{ flexDirection: "row" }}>
+              <View style={{ justifyContent: "center" }}>
+                <TouchableOpacity onPress={() => setNewType(0)}>
+                  <Text>ข่าวสาร</Text>
+                </TouchableOpacity>
               </View>
-            <RadioButton
-              value="0"
-              status={newsType === 0 ? "checked" : "unchecked"}
-              onPress={() => setNewType(0)}
-            />
+              <RadioButton
+                value="0"
+                status={newsType === 0 ? "checked" : "unchecked"}
+                onPress={() => setNewType(0)}
+              />
             </View>
 
-            <View style={{flexDirection:'row',marginLeft:10}}>
-              <View style={{justifyContent:'center'}}>
-              <TouchableOpacity
-                onPress={()=>setNewType(1)}
-              >
-              <Text >กิจกรรม</Text>
-              </TouchableOpacity>
+            <View style={{ flexDirection: "row", marginLeft: 10 }}>
+              <View style={{ justifyContent: "center" }}>
+                <TouchableOpacity onPress={() => setNewType(1)}>
+                  <Text>กิจกรรม</Text>
+                </TouchableOpacity>
               </View>
-            <RadioButton
-              value="1"
-              status={newsType === 1 ? "checked" : "unchecked"}
-              onPress={() => setNewType(1)}
-            />
+              <RadioButton
+                value="1"
+                status={newsType === 1 ? "checked" : "unchecked"}
+                onPress={() => setNewType(1)}
+              />
             </View>
 
-            <View style={{flexDirection:'row',marginLeft:10}}>
-              <View style={{justifyContent:'center'}}>
-              <TouchableOpacity
-                onPress={()=>setNewType(2)}
-              >
-              <Text >ประกาศ</Text>
-              </TouchableOpacity>
+            <View style={{ flexDirection: "row", marginLeft: 10 }}>
+              <View style={{ justifyContent: "center" }}>
+                <TouchableOpacity onPress={() => setNewType(2)}>
+                  <Text>ประกาศ</Text>
+                </TouchableOpacity>
               </View>
-            <RadioButton
-              value="2"
-              status={newsType === 2 ? "checked" : "unchecked"}
-              onPress={() => setNewType(2)}
-            />
+              <RadioButton
+                value="2"
+                status={newsType === 2 ? "checked" : "unchecked"}
+                onPress={() => setNewType(2)}
+              />
             </View>
+          </View>
+          {/* ///////////////// END เลือกประเทภ /////////////////////// */}
+          <Seperator />
+          {/* ///////////////// START เลือกรูปประกอบ /////////////////////// */}
+          <Text style={styles.title}>เลือกรูปประกอบ</Text>
+          <View style={{ height: 250, alignItems: "center" }}>
+            <Text>{test}</Text>
+            <Image
+              style={{ width: "50%", height: "50%" }}
+              source={{ uri: base64image }}
+            />
+          </View>
+          <View style={{ marginBottom: 15 }}>
+            <Button
+              labelStyle={{ color: "white", fontWeight: "bold" }}
+              color="#5DADE2"
+              mode="contained"
+              onPress={() => lookfile()}
+            >
+              Click me to pick File
+            </Button>
+          </View>
+          {/* ///////////////// END เลือกรูปประกอบ /////////////////////// */}
+          <Seperator />
+          {/* ///////////////// START เขียนคำบรรยาย /////////////////////// */}
+          <Text style={styles.title}>เขียนคำบรรยาย</Text>
+          <View>
+            <TextInput
+              mode="outlined"
+              label="คำบรรยาย"
+              value={text}
+              onChangeText={(text) => setText(text)}
+              multiline={true}
+              numberOfLines={4}
+              error={errorInput}
+            />
+          </View>
+          {/* ///////////////// END เขียนคำบรรยาย /////////////////////// */}
+          <Seperator />
+          <View style={{height:50, backgroundColor:'white'}}>
+          <View style={{ flexDirection: "row",justifyContent:'space-around' }}>
+            <Button
 
+              mode="contained"
+              onPress={() => console.log("Pressed")}
+            >
+              Press me
+            </Button>
+            <Button
+              style={{marginLeft:20}}
+              mode="contained"
+              onPress={() => console.log("Pressed")}
+            >
+              Press me
+            </Button>
           </View>
-          <Seperator />
-        </View>
-
-        <View style={styles.box}>
-          <Text style={styles.title}>กิจกรรม</Text>
-          <View style={styles.imageBox}>
-            <Text style={styles.imageText}>รูปภาพ</Text>
           </View>
-          <View style={styles.seeMoreBox}>
-            <Text style={styles.seeMoreText}>ดูทั้งหมด</Text>
-          </View>
-          <Seperator />
-        </View>
-        <View style={styles.box}>
-          <Text style={styles.title}>กิจกรรม</Text>
-          <View style={styles.imageBox}>
-            <Text style={styles.imageText}>รูปภาพ</Text>
-          </View>
-          <View style={styles.seeMoreBox}>
-            <Text style={styles.seeMoreText}>ดูทั้งหมด</Text>
-          </View>
-          <Seperator />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -92,8 +158,11 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     justifyContent: "center",
-    margin: 10,
+    marginTop:10,
+    marginLeft:10,
+    marginRight:10,
   },
   header: {
     height: 50,
