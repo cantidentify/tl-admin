@@ -1,222 +1,50 @@
-import React, { useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  Image
-} from "react-native";
-import { TextInput, RadioButton, Button } from "react-native-paper";
-import DocumentPicker from "react-native-document-picker";
-var RNFS = require("react-native-fs");
+import * as React from "react";
+import { View, StyleSheet, SafeAreaView, ScrollView, Text } from "react-native";
+import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
-const Seperator = () => <View style={styles.seperator} />;
+const LeftContent = (props) => (
+  <AntDesign name="notification" size={24} color={"red"} />
+);
 
-const App = () => {
-  const [newsType, setNewType] = React.useState(0);
-  let [base64image, setbase64image] = useState();
-  let [test, setTest] = useState();
-  const [text, setText] = React.useState("");
-  const [errorInput, setErrInput] = React.useState(false);
+const RenderCard = () => {
+  return (
+    <>
+      <Card style={{ borderRadius: 15 }}>
+        <Card.Cover source={{ uri: "https://picsum.photos/700" }} />
+        <Card.Content>
+          <Title>Card title</Title>
+          <Paragraph>Card content</Paragraph>
+        </Card.Content>
+        <Card.Actions style={{ alignSelf: "flex-end" }}>
+          <Button onPress={() => alert("Delete")}>Delete</Button>
+        </Card.Actions>
+      </Card>
+    </>
+  );
+};
 
-  async function lookfile() {
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.images],
-      });
-      console.log(res.uri, res.type, res.name, res.size);
-
-      const split = res.uri.split("/");
-      const name = split.pop();
-      const inbox = split.pop();
-
-      //console.log(res.size)
-      //console.log(res.uri)
-      RNFS.readFile(res.uri, "base64").then((res) => {
-        setbase64image(`data:image/jpg;base64,${res}`);
-        console.log(res);
-      });
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-      } else {
-        throw err;
-      }
-    }
-  }
-
+const ActivityList = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View style={styles.box}>
-          {/* ///////////////// START เลือกประเทภ /////////////////////// */}
-          <Text style={styles.title}>เลือกประเภท</Text>
-          <View style={{ justifyContent: "center", flexDirection: "row" }}>
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ justifyContent: "center" }}>
-                <TouchableOpacity onPress={() => setNewType(0)}>
-                  <Text>ข่าวสาร</Text>
-                </TouchableOpacity>
-              </View>
-              <RadioButton
-                value="0"
-                status={newsType === 0 ? "checked" : "unchecked"}
-                onPress={() => setNewType(0)}
-              />
-            </View>
-
-            <View style={{ flexDirection: "row", marginLeft: 10 }}>
-              <View style={{ justifyContent: "center" }}>
-                <TouchableOpacity onPress={() => setNewType(1)}>
-                  <Text>กิจกรรม</Text>
-                </TouchableOpacity>
-              </View>
-              <RadioButton
-                value="1"
-                status={newsType === 1 ? "checked" : "unchecked"}
-                onPress={() => setNewType(1)}
-              />
-            </View>
-
-            <View style={{ flexDirection: "row", marginLeft: 10 }}>
-              <View style={{ justifyContent: "center" }}>
-                <TouchableOpacity onPress={() => setNewType(2)}>
-                  <Text>ประกาศ</Text>
-                </TouchableOpacity>
-              </View>
-              <RadioButton
-                value="2"
-                status={newsType === 2 ? "checked" : "unchecked"}
-                onPress={() => setNewType(2)}
-              />
-            </View>
-          </View>
-          {/* ///////////////// END เลือกประเทภ /////////////////////// */}
-          <Seperator />
-          {/* ///////////////// START เลือกรูปประกอบ /////////////////////// */}
-          <Text style={styles.title}>เลือกรูปประกอบ</Text>
-          <View style={{ height: 250, alignItems: "center" }}>
-            <Text>{test}</Text>
-            <Image
-              style={{ width: "50%", height: "50%" }}
-              source={{ uri: base64image }}
-            />
-          </View>
-          <View style={{ marginBottom: 15 }}>
-            <Button
-              labelStyle={{ color: "white", fontWeight: "bold" }}
-              color="#5DADE2"
-              mode="contained"
-              onPress={() => lookfile()}
-            >
-              Click me to pick File
-            </Button>
-          </View>
-          {/* ///////////////// END เลือกรูปประกอบ /////////////////////// */}
-          <Seperator />
-          {/* ///////////////// START เขียนคำบรรยาย /////////////////////// */}
-          <Text style={styles.title}>เขียนคำบรรยาย</Text>
-          <View>
-            <TextInput
-              mode="outlined"
-              label="คำบรรยาย"
-              value={text}
-              onChangeText={(text) => setText(text)}
-              multiline={true}
-              numberOfLines={4}
-              error={errorInput}
-            />
-          </View>
-          {/* ///////////////// END เขียนคำบรรยาย /////////////////////// */}
-          <Seperator />
-          <View style={{height:50, backgroundColor:'white'}}>
-          <View style={{ flexDirection: "row",justifyContent:'space-around' }}>
-            <Button
-
-              mode="contained"
-              onPress={() => console.log("Pressed")}
-            >
-              Press me
-            </Button>
-            <Button
-              style={{marginLeft:20}}
-              mode="contained"
-              onPress={() => console.log("Pressed")}
-            >
-              Press me
-            </Button>
-          </View>
-          </View>
+        <View style={styles.card}>
+          <RenderCard />
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
+export default ActivityList;
+
 const styles = StyleSheet.create({
   container: {
-    flex:1,
-    justifyContent: "center",
-    marginTop:10,
-    marginLeft:10,
-    marginRight:10,
+    flex: 1,
+    marginTop: 10,
   },
-  header: {
-    height: 50,
-    backgroundColor: "#00BF74",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerText: {
-    fontSize: 18,
-    color: "white",
-    fontFamily: "",
-    fontWeight: "bold",
-  },
-  box: {
-    paddingTop: 5,
-    marginBottom: 0,
-    backgroundColor: "#FFFFFF",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  imageBox: {
-    backgroundColor: "#F0F0F0",
-    height: 100,
-    borderRadius: 7,
-  },
-  imageText: {
-    margin: "auto",
-    color: "#7CC5A8",
-    fontSize: 25,
-  },
-  imageMap: {
-    width: "100%",
-    height: 240,
-    backgroundColor: "black",
-  },
-  seeMoreBox: {
-    marginTop: 5,
-    borderRadius: 7,
-  },
-  seeMoreText: {
-    paddingTop: 10,
-    fontSize: 15,
-    color: "#41A77F",
-    marginBottom: 10,
-  },
-  seperator: {
-    marginVertical: 8,
-    borderBottomColor: "#00BF74",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+  card: {
+    margin: 5,
   },
 });
-
-export default App;

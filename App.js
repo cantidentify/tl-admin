@@ -2,8 +2,6 @@ import React from 'react'
 import { View, Text, Button } from 'react-native'
 
 import { Ionicons } from '@expo/vector-icons';
-
-
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import {
@@ -11,17 +9,45 @@ import {
   CardStyleInterpolators,
 } from '@react-navigation/stack';
 
-
-
 import { DrawerContent } from './screen/DrawerContent';
 
 import Activity from './screen/Activity';
 import Gallery from './screen/Gallery';
+import UpdateActivity from './screen/UpdateActivity';
+import Login from './screen/Login';
 
 const Drawer = createDrawerNavigator();
-
 const ActivityStack = createStackNavigator();
 const GalleryStack = createStackNavigator();
+
+const LoginStack = createStackNavigator();
+const RootStack = createStackNavigator();
+
+const LoginStackScreen = ( {navigation} ) =>(
+  <LoginStack.Navigator
+    screenOptions={{
+      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      headerStyle: {
+        backgroundColor: '#009387',
+      },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+        fontWeight: 'bold'
+        }
+    }}>
+    <LoginStack.Screen
+      name="Login"
+      component={Login}
+      options={{
+        headerTitle: 'Login',
+        headerTitleStyle: {alignSelf: 'center'},
+        headerShown: false
+      }}
+    />
+
+    {/* {<HomeStack.Screen name="Info" component={InfoStackScreen} options={{headerShown: false}} /> } */}
+  </LoginStack.Navigator>
+)
 
 const ActivityStackScreen = ( {navigation} ) => (
   <ActivityStack.Navigator
@@ -39,11 +65,25 @@ const ActivityStackScreen = ( {navigation} ) => (
       name="Activity"
       component={Activity}
       options={{
-        headerTitle: 'อัปเดตข่าวสารกิจกรรม',
+        headerTitle: 'รายการข่าวสารกิจกรรม',
         headerTitleStyle: {alignSelf: 'center'},
         headerLeft: () => (
           <Ionicons.Button name="ios-menu" size={25} backgroundColor="#009387" onPress={() => navigation.openDrawer()}></Ionicons.Button>
-        )
+        ),
+        headerRight: () => (
+          <View style={{justifyContent:'center'}}>
+          <Ionicons.Button name="add-circle-outline" size={35} color="#ecf0f1" backgroundColor="#009387" onPress={() => navigation.navigate('UpdateActivity')}></Ionicons.Button>
+          </View>
+          )
+      }}
+    />
+
+<ActivityStack.Screen
+      name="UpdateActivity"
+      component={UpdateActivity}
+      options={{
+        headerTitle: 'เพิ่มข่าวสารกิจกรรม',
+        headerTitleStyle: {alignSelf: 'center'},
       }}
     />
 
@@ -81,12 +121,22 @@ const GalleryStackScreen = ( {navigation} ) => (
 
 
 export default function App() {
+
+  const [userToken, setUserToken] = React.useState(null); 
+  
+
   return (
     <NavigationContainer>
+      {userToken !== null? 
       <Drawer.Navigator initialRouteName="ActivityUpdate" drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="ActivityUpdate" component={ActivityStackScreen} />
         <Drawer.Screen name="GalleryUpdate" component={GalleryStackScreen} />
       </Drawer.Navigator>
+      :
+      <RootStack.Navigator headerMode='none'>
+        <RootStack.Screen name="LoginStack" component={LoginStackScreen}/>
+      </RootStack.Navigator>
+      }
     </NavigationContainer>
   );
 }
